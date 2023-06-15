@@ -1,0 +1,40 @@
+###################################
+# Script comparacao usuario e senha 
+# Autor: Manassés 
+# Data: 15/06/2023
+# Versao: 2
+###########################
+import-module ActiveDirectory
+cls
+$arquivo = Get-Content C:\script\login.csv  #carrega o arquivo que contem os logins para teste.
+$Linhas = (Get-Content C:\script\login.csv).count
+$password = Get-Content C:\script\BadPasswords.txt  #carrega o arquivo que contem os logins para teste.
+$qtdsenhas = (Get-Content C:\script\BadPasswords.txt).count
+$dataHora = Get-Date -Format "yyyyMMdd_HHmmss"  # Obter a data e hora atual
+$nomeArquivo = "resultado_$dataHora.txt"  # Definir o nome do arquivo com base na data e hora atual
+$caminhoArquivo = "C:\script\para\$nomeArquivo"
+
+#Funcao para teste de login/senha
+Function Test-ADAuthentication {
+    param(
+        $username,
+        $password)
+    
+    (New-Object DirectoryServices.DirectoryEntry "",$username,$password).psbase.name -ne $null
+}
+
+$caminhoArquivo = "C:\script\usuarios.txt"
+for ($j=0;$j -le $qtdsenhas;$j++){ 
+# Laço testar linha por linha do arquivo
+for ($i=0;$i -le $linhas;$i++){ 
+#Usando de fato a funcao, para comparar cada login com a senha para teste, caso a senha seja válida a saída sera True
+        if (Test-ADAuthentication -username $arquivo[$i] -password $password[$j] -eq "True"){
+        #imprime na tela se encontrar o usuario
+            $resultado = $arquivo[$i]
+            # Adicionar o resultado ao arquivo de saída
+            $resultado | Out-File -FilePath $caminhoArquivo -Append
+    
+         }
+      
+    }
+    }
