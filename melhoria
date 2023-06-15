@@ -23,7 +23,6 @@ Function Test-ADAuthentication {
     (New-Object DirectoryServices.DirectoryEntry "",$username,$password).psbase.name -ne $null
 }
 
-$caminhoArquivo = "C:\script\usuarios.txt"
 for ($j=0;$j -le $qtdsenhas;$j++){ 
 # Laço testar linha por linha do arquivo
 for ($i=0;$i -le $linhas;$i++){ 
